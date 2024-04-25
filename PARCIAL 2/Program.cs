@@ -47,6 +47,16 @@ public class Gerente : IManager
         AnsiConsole.MarkupLine("[green]Bienvenido Gerente[/]");
         AnsiConsole.MarkupLine("[yellow]1[/] Ver listado de desarrolladores");
         AnsiConsole.MarkupLine("[yellow]2[/] Ver proyectos");
+        AnsiConsole.MarkupLine("[green]Empleados[/]");
+        foreach(var empleado in Desarrolladores)
+        {
+            AnsiConsole.MarkupLine($"- {empleado.Email}");
+        }
+        AnsiConsole.MarkupLine("[green]Proyectos[/]");
+        foreach(var proyecto in Proyectos)
+        {
+            AnsiConsole.MarkupLine($"- {proyecto.Nombre} - {proyecto.Estado}");
+        }
     }
 }
 
@@ -89,6 +99,11 @@ public class Desarrollador : IDesarrollador
     {
         AnsiConsole.MarkupLine("[green]Bienvenido Desarrollador[/]");
         AnsiConsole.MarkupLine("[yellow]1[/] Ver proyectos asignados");
+        AnsiConsole.MarkupLine("[green]Proyectos[/]");
+        foreach(var proyecto in Proyectos)
+        {
+            AnsiConsole.MarkupLine($"- {proyecto.Nombre} - {proyecto.Estado}");
+        }
     }
 }
 
@@ -100,35 +115,50 @@ public class Program
         // Crear una lista de empleados
         List<IEmpleado> empleados = new List<IEmpleado>
         {
-            new Gerente { Email = "gerente123", Password = "123456" },
+            new Gerente { Email = "gerente123", Password = "123456", Proyectos = new List<Proyecto>
+                {
+                    new Proyecto { Nombre = "Proyecto Banana", Estado = "Terminado" },
+                    new Proyecto { Nombre = "Proyecto XD", Estado = "Por aprobar" },
+                    new Proyecto { Nombre = "Proyecto Cemento", Estado = "Terminado" }
+                },
+                Desarrolladores = new List<Desarrollador>
+                {
+                    new Desarrollador { Email = "developer1", Proyectos = new List<Proyecto> { new Proyecto { Nombre = "Proyecto A", Estado = "Terminado" } } },
+                    new Desarrollador { Email = "developer2", Proyectos = new List<Proyecto> { new Proyecto { Nombre = "Proyecto B", Estado = "Por aprobar" } } }
+                }
+            },
             new RecursosHumanos { Email = "RH1234", Password = "123456" },
-            new Desarrollador { Email = "uselessdev", Password = "123456" }
+            new Desarrollador { Email = "uselessdev", Password = "123456", Proyectos = new List<Proyecto>
+                {
+                    new Proyecto { Nombre = "Proyecto Banana", Estado = "Terminado" },
+                    new Proyecto { Nombre = "Proyecto XD", Estado = "Por aprobar" },
+                    new Proyecto { Nombre = "Proyecto Cemento", Estado = "Terminado" }
+                }
+            }
         };
 
         // Implementar el login
         Login(empleados);
     }
 
- static void Login(List<IEmpleado> empleados)
-{
-    AnsiConsole.MarkupLine("[green]Bienvenido al sistema de gestión de empleados[/]");
-    AnsiConsole.MarkupLine("Por favor, ingrese sus credenciales:");
-
-    string email = AnsiConsole.Ask<string>("Correo electrónico: ");
-    string password = AnsiConsole.Ask<string>("Contraseña: ");
-
-    IEmpleado empleado = empleados.Find(e => e.Email == email && e.Password == password);
-
-    if (empleado != null)
+    static void Login(List<IEmpleado> empleados)
     {
-        empleado.Menu();
-    }
-    else
-    {
-        AnsiConsole.MarkupLine("[red]Credenciales incorrectas. Por favor, inténtelo de nuevo.[/]");
-        Login(empleados);
-    }
-}
+        AnsiConsole.MarkupLine("[green]Bienvenido al sistema de gestión de empleados[/]");
+        AnsiConsole.MarkupLine("Por favor, ingrese sus credenciales:");
 
+        string email = AnsiConsole.Ask<string>("Correo electrónico: ");
+        string password = AnsiConsole.Ask<string>("Contraseña: ");
 
+        IEmpleado empleado = empleados.Find(e => e.Email == email && e.Password == password);
+
+        if (empleado != null)
+        {
+            empleado.Menu();
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[red]Credenciales incorrectas. Por favor, inténtelo de nuevo.[/]");
+            Login(empleados);
+        }
+    }
 }
