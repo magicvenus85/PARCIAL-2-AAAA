@@ -133,15 +133,32 @@ public class RecursosHumanos : IRecursosHumanos, IEmpleado
     }
 
     public void GestionarPagos()
+{
+    AnsiConsole.MarkupLine("[green]Gestión de Pagos[/]");
+    AnsiConsole.MarkupLine("[yellow]Lista de Desarrolladores[/]");
+
+    // Mostrar lista de desarrolladores disponibles para pagarles
+    for (int i = 0; i < desarrolladores.Count; i++)
     {
-        decimal monto = AnsiConsole.Ask<decimal>("Ingrese el monto a pagar: ");
-        foreach (var desarrollador in desarrolladores)
-        {
-            // Lógica para realizar pagos a desarrolladores
-            // Puedes añadir más detalles o interacciones según sea necesario
-            AnsiConsole.MarkupLine($"Se ha realizado un pago de {monto:C} al desarrollador {desarrollador.Email}.");
-        }
+        AnsiConsole.MarkupLine($"{i + 1}. {desarrolladores[i].Email}");
     }
+
+    // Seleccionar a quién pagar
+    int opcion = AnsiConsole.Ask<int>("Seleccione el número correspondiente al desarrollador al que desea pagar: ");
+
+    if (opcion >= 1 && opcion <= desarrolladores.Count)
+    {
+        // Realizar el pago
+        decimal monto = AnsiConsole.Ask<decimal>("Ingrese el monto a pagar: ");
+        AnsiConsole.MarkupLine($"Se ha realizado un pago de {monto:C} al desarrollador {desarrolladores[opcion - 1].Email}.");
+    }
+    else
+    {
+        AnsiConsole.MarkupLine("[red]Opción no válida. Por favor, seleccione un número válido de la lista.[/]");
+    }
+}
+
+
 
     public void Menu()
     {
